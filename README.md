@@ -44,6 +44,8 @@ And then execute:
 
 ### configs
 ```ruby
+require "google_speech_v2"
+
 # make sure you set your API KEY before using
 GoogleSpeechV2::Config.api_key = "__YOUR_KEY_HERE__"
 
