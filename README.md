@@ -1,6 +1,6 @@
 # Google Speech API v2 gem
 
-This gem lets you to record your voice from microphone (for fixed amount of seconds) and gets back with the voice text.
+This gem lets you record your voice from microphone (for a fixed amount of seconds) and gets you back with the voice text.
 
 ## References
 * https://github.com/gillesdemey/google-speech-v2
@@ -49,7 +49,6 @@ require "google_speech_v2"
 # make sure you set your API KEY before using
 GoogleSpeechV2::Config.api_key = "__YOUR_KEY_HERE__"
 
-
 # available list -> GoogleSpeechV2.available_lang_list
 GoogleSpeechV2::Config.lang = "en-us" # default, the language you speak
 
@@ -64,7 +63,7 @@ GoogleSpeechV2.speech_to_text_block do |text, raw|
   p raw
 end
 
-# this will call the block above
+# this will call the block above when done
 GoogleSpeechV2.speech_to_text # blocks till recording ends
 ```
 
