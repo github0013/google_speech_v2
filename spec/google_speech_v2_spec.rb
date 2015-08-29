@@ -29,7 +29,9 @@ describe GoogleSpeechV2 do
     context :block_given do 
       it do 
         VCR.use_cassette("GoogleSpeechV2::SpeechToText#ensure_upload - has key") do
-          expect{|block| GoogleSpeechV2.speech_to_text &block }.to yield_with_args "good morning Google how are you feeling today", Array
+          expect{|block| 
+            GoogleSpeechV2.speech_to_text &block 
+          }.to yield_with_args "good morning Google how are you feeling today", Array
         end
       end
     end
@@ -45,7 +47,9 @@ describe GoogleSpeechV2 do
       context "speech_to_text_block set" do
         before do
           GoogleSpeechV2.speech_to_text_block{}
-          expect(GoogleSpeechV2.module_eval{ @block }).to receive(:call).with("good morning Google how are you feeling today", Array)
+          expect( 
+            GoogleSpeechV2.module_eval{ @block }
+          ).to receive(:call).with("good morning Google how are you feeling today", Array)
         end
 
         it do 
