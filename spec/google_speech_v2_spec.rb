@@ -21,7 +21,10 @@ describe GoogleSpeechV2 do
   end
 
   describe :speech_to_text do
-    before{ GoogleSpeechV2.clear_speech_to_text_block }
+    before do
+      allow(Kernel).to receive(:system)
+      GoogleSpeechV2.clear_speech_to_text_block
+    end
 
     context :block_given do 
       it do 
