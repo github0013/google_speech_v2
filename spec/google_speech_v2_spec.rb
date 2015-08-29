@@ -4,15 +4,15 @@ describe GoogleSpeechV2 do
   before{ GoogleSpeechV2::Config.api_key = ENV["API_KEY"]}
 
   describe :speech_to_text_block do
-    it do
-      expect{ GoogleSpeechV2.speech_to_text_block{} }.to change{
-        GoogleSpeechV2.module_eval{ @block }
-      }.from(nil)
-    end
+    before{ GoogleSpeechV2.clear_speech_to_text_block }
 
-    describe "@block" do
-      before{ GoogleSpeechV2.speech_to_text_block{} }
-      it{ expect(GoogleSpeechV2.module_eval{ @block }).to be_instance_of Proc }
+    describe "setting a block" do
+      it do
+        expect{ GoogleSpeechV2.speech_to_text_block{} }.
+          to change{ 
+            GoogleSpeechV2.module_eval{ @block } 
+          }.from(nil).to be_instance_of(Proc)
+      end
     end
   end
 
