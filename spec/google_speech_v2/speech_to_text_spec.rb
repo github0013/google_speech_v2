@@ -55,13 +55,45 @@ describe GoogleSpeechV2::SpeechToText do
 
       it do 
         VCR.use_cassette("GoogleSpeechV2::SpeechToText#ensure_upload - has key") do
-          expect{|block| subject.ensure_upload &block }.to yield_with_args String, Array
+          expect{|block| subject.ensure_upload &block }.to yield_with_args "good morning Google how are you feeling today", Array
         end
       end
 
-      it do 
-        VCR.use_cassette("GoogleSpeechV2::SpeechToText#ensure_upload - has key") do
-          expect{|block| subject.ensure_upload &block }.to yield_with_args "good morning Google how are you feeling today", Array
+      describe "multiple results" do
+        let(:mechanize){ spy(:mechanize) }
+        before do
+          file = spy(:mechanize_file)
+          allow(file).to receive(:body).and_return body
+          allow(mechanize).to receive(:post).and_return file
+          allow(Mechanize).to receive(:new).and_return mechanize
+        end
+
+        context "when multiple confidences" do
+          let(:body) do
+            <<-BODY
+              {"result": []}
+              {"result": [{"alternative": [{"transcript": "confidence no.2", "confidence": 0.95207101}, {"transcript": "confidence nil 1"}, {"transcript": "confidence nil 2"}], "final": true}], "result_index": 0}
+              {"result": [{"alternative": [{"transcript": "confidence no.1", "confidence": 0.99999999}, {"transcript": "confidence nil 3"}, {"transcript": "confidence nil 4"}], "final": true}], "result_index": 1}
+            BODY
+          end
+
+          it do 
+            expect{|block| subject.ensure_upload &block }.to yield_with_args "confidence no.1", Array
+          end
+        end
+
+        context "when no confidences" do
+          let(:body) do
+            <<-BODY
+              {"result": []}
+              {"result": [{"alternative": [{"transcript": "confidence no.2"}, {"transcript": "confidence nil 1"}, {"transcript": "confidence nil 2"}], "final": true}], "result_index": 0}
+              {"result": [{"alternative": [{"transcript": "confidence no.1"}, {"transcript": "confidence nil 3"}, {"transcript": "confidence nil 4"}], "final": true}], "result_index": 1}
+            BODY
+          end
+
+          it do 
+            expect{|block| subject.ensure_upload &block }.to yield_with_args "confidence no.2", Array
+          end
         end
       end
     end

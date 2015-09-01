@@ -28,4 +28,5 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "activesupport"
   spec.add_dependency "mechanize"
+  spec.add_dependency "jsonpath"
 end

@@ -3,6 +3,7 @@ require 'active_support'
 require 'active_support/core_ext'
 require 'active_support/core_ext/hash/indifferent_access'
 require "mechanize"
+require "jsonpath"
 
 module GoogleSpeechV2
   class SpeechToText
@@ -40,12 +41,18 @@ module GoogleSpeechV2
           JSON.parse(line).with_indifferent_access
         end
 
-        text =  if transcript = raw.last[:result].first[:alternative].find{|transcript| transcript.has_key? :confidence }
-                  transcript[:transcript]
-                else
-                  raw.last[:result].first[:alternative].first[:transcript]
-                end
-                
+        transcripts = raw.collect do |json|
+                        JsonPath.on(json, "$..alternative").flatten
+                      end.flatten
+
+        text = if transcripts.any?{|hash| hash.has_key? :confidence }
+                transcripts.sort_by do |hash|
+                  hash[:confidence].to_f
+                end.reverse.first
+              else
+                transcripts.first
+              end[:transcript]
+
         yield(text, raw)
       end
     end

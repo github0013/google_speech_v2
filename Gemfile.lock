@@ -3,6 +3,7 @@ PATH
   specs:
     google_speech_v2 (0.0.1)
       activesupport
+      jsonpath
       mechanize
 
 GEM
@@ -45,6 +46,8 @@ GEM
       domain_name (~> 0.5)
     i18n (0.7.0)
     json (1.8.3)
+    jsonpath (0.5.7)
+      multi_json
     listen (2.10.0)
       celluloid (~> 0.16.0)
       rb-fsevent (>= 0.9.3)
@@ -63,6 +66,7 @@ GEM
     mime-types (2.6.1)
     mini_portile (0.6.2)
     minitest (5.8.0)
+    multi_json (1.11.1)
     nenv (0.2.0)
     net-http-digest_auth (1.4)
     net-http-persistent (2.9.4)
