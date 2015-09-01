@@ -53,9 +53,11 @@ describe GoogleSpeechV2::SpeechToText do
                           )
       end
 
-      it do 
-        VCR.use_cassette("GoogleSpeechV2::SpeechToText#ensure_upload - has key") do
-          expect{|block| subject.ensure_upload &block }.to yield_with_args "good morning Google how are you feeling today", Array
+      describe "actual query to Google" do
+        it do 
+          VCR.use_cassette("GoogleSpeechV2::SpeechToText#ensure_upload - has key") do
+            expect{|block| subject.ensure_upload &block }.to yield_with_args "good morning Google how are you feeling today", Array
+          end
         end
       end
 
