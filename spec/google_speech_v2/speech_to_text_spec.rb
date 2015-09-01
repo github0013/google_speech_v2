@@ -82,6 +82,19 @@ describe GoogleSpeechV2::SpeechToText do
           end
         end
 
+        context "when one confidence" do
+          let(:body) do
+            <<-BODY
+              {"result": []}
+              {"result": [{"alternative": [{"transcript": "confidence no.1", "confidence": 0.99999999}, {"transcript": "confidence nil 3"}, {"transcript": "confidence nil 4"}], "final": true}], "result_index": 1}
+            BODY
+          end
+
+          it do 
+            expect{|block| subject.ensure_upload &block }.to yield_with_args "confidence no.1", Array
+          end
+        end
+
         context "when multiple confidences" do
           let(:body) do
             <<-BODY
