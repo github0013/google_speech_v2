@@ -61,13 +61,25 @@ describe GoogleSpeechV2::SpeechToText do
         end
       end
 
-      describe "multiple results" do
+      describe "results" do
         let(:mechanize){ spy(:mechanize) }
         before do
           file = spy(:mechanize_file)
           allow(file).to receive(:body).and_return body
           allow(mechanize).to receive(:post).and_return file
           allow(Mechanize).to receive(:new).and_return mechanize
+        end
+
+        context "when no results" do
+          let(:body) do
+            <<-BODY
+              {"result": []}
+            BODY
+          end
+
+          it do 
+            expect{|block| subject.ensure_upload &block }.to yield_with_args "", Array
+          end
         end
 
         context "when multiple confidences" do

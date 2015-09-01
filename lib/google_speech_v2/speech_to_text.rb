@@ -45,6 +45,8 @@ module GoogleSpeechV2
                         JsonPath.on(json, "$..alternative").flatten
                       end.flatten
 
+        return yield("", raw) if transcripts.size.zero?
+
         text = if transcripts.any?{|hash| hash.has_key? :confidence }
                 transcripts.sort_by do |hash|
                   hash[:confidence].to_f
